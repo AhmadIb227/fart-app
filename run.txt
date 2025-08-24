@@ -1,0 +1,19 @@
+C:\Users\AHMAD-MO>dart --version
+Dart SDK version: 3.9.0 (stable) (Mon Aug 11 07:58:10 2025 -0700) on "windows_x64"
+
+
+C:\Users\AHMAD-MO>flutter --version
+Flutter 3.35.1 • channel stable • https://github.com/flutter/flutter.git
+Framework • revision 20f8274939 (10 days ago) • 2025-08-14 10:53:09 -0700
+Engine • hash 6cd51c08a88e7bbe848a762c20ad3ecb8b063c0e (revision 1e9a811bf8) (10 days ago) • 2025-08-13 23:35:25.000Z
+Tools • Dart 3.9.0 • DevTools 2.48.0
+
+------
+//windows
+docker build -t messaging_app .
+//later
+docker run -it --rm -v ${PWD}:/app messaging_app  
+//or .\run.ps1
+//Mac-Linuxs
+docker run -it --rm -v $(pwd):/app messaging_app
+
