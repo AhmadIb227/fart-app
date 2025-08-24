@@ -1,1 +1,1 @@
-docker run -it --rm -v ${PWD}:/app messaging_app
+docker run -it --rm -v ${PWD}:/app fort

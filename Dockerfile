@@ -4,7 +4,9 @@ WORKDIR /app
 
 COPY pubspec.* ./
 
-RUN flutter pub get
+ENV PUB_CACHE=/root/.pub-cache
+
+RUN flutter pub get 
 
 COPY . .
 
