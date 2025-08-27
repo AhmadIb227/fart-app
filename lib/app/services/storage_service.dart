@@ -1,16 +1,14 @@
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-class StorageService {
-  static final GetStorage _box = GetStorage('app');
+class StorageService extends GetxService {
+  final GetStorage _box = GetStorage();
 
-  static Future<void> init() async {
-    await GetStorage.init('app');
+  bool isFirstLaunch() {
+    return _box.read('seenOnboarding') ?? true;
   }
 
-  static String? getString(String key) => _box.read<String>(key);
-  static Future<void> setString(String key, String value) =>
-      _box.write(key, value);
-
-  static const String kAvatarPath = 'avatar_path';
-  static const String kUserName = 'user_name';
+  void setOnboardingSeen() {
+    _box.write('seenOnboarding', false);
+  }
 }

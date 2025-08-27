@@ -1,33 +1,29 @@
 import 'package:get/get.dart';
+import '../modules/splash/controllers/splash_controller.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/splash/views/onboarding_view.dart';
-import '../modules/auth/views/login_view.dart';
-import '../modules/auth/views/profile_setup_view.dart';
 import '../modules/home/views/home_view.dart';
-import '../modules/security/views/pin_setup_view.dart';
-import '../modules/security/views/biometric_setup_view.dart';
-import '../modules/auth/bindings/auth_binding.dart';
-import 'app_routes.dart';
+import '../routes/app_routes.dart';
 
 class AppPages {
-  static final routes = <GetPage>[
-    GetPage(name: AppRoutes.splash, page: () => const SplashView()),
-    GetPage(name: AppRoutes.onboarding, page: () => const OnboardingView()),
+  static final pages = [
     GetPage(
-      name: AppRoutes.login,
-      page: () => const LoginView(),
-      binding: AuthBinding(),
+      name: Routes.splash,
+      page: () => SplashView(),
+      binding: BindingsBuilder(() {
+        Get.put(SplashController());
+      }),
     ),
     GetPage(
-      name: AppRoutes.profileSetup,
-      page: () => const ProfileSetupView(),
-      binding: AuthBinding(),
+      name: Routes.onboarding,
+      page: () => OnboardingView(),
+      binding: BindingsBuilder(() {
+        // Onboarding controller created inside view file on first use
+      }),
     ),
-    GetPage(name: AppRoutes.home, page: () => const HomeView()),
-    GetPage(name: AppRoutes.pinSetup, page: () => const PinSetupView()),
     GetPage(
-      name: AppRoutes.biometricSetup,
-      page: () => const BiometricSetupView(),
+      name: Routes.home,
+      page: () => HomeView(),
     ),
   ];
 }

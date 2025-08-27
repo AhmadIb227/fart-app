@@ -1,40 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'app/core/theme/app_colors.dart';
-import 'app/core/theme/app_text_styles.dart';
+import 'package:get_storage/get_storage.dart';
 import 'app/routes/app_pages.dart';
 import 'app/routes/app_routes.dart';
 import 'app/services/storage_service.dart';
+import 'app/core/theme/app_colors.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await StorageService.init();
-  runApp(const MyApp());
+  await GetStorage.init(); // تهيئة التخزين
+  Get.put(StorageService()); // تسجيل الخدمة
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(390, 844),
-      builder: (_, __) {
-        return GetMaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Fart App',
-          theme: ThemeData(
-            scaffoldBackgroundColor: AppColors.backgroundGray,
-            primaryColor: AppColors.primaryGreen,
-            textTheme: AppTextStyles.textTheme,
-            useMaterial3: true,
-          ),
-          // فتح التطبيق مباشرة على صفحة Register
-          initialRoute: AppRoutes.profileSetup,
-          getPages: AppPages.routes,
-        );
-      },
+    return GetMaterialApp(
+      title: 'Onboarding App',
+      debugShowCheckedModeBanner: false,
+      initialRoute: Routes.splash,
+      getPages: AppPages.pages,
+      theme: ThemeData(
+        scaffoldBackgroundColor: AppColors.backgroundGray,
+        primaryColor: AppColors.primaryGreen,
+        fontFamily: 'Roboto',
+      ),
     );
   }
 }
