@@ -30,6 +30,7 @@ class LoginController extends GetxController {
       emailController.text = storage.read('email');
       rememberMe.value = true;
     }
+    print("Biometric status: ${storage.read('is_biometric_enabled')}");
   }
 
   @override
@@ -53,9 +54,6 @@ class LoginController extends GetxController {
 
         if (emailController.text == "test@test.com" &&
             passwordController.text == "123456") {
-          // --- بداية التعديلات ---
-
-          // 1. أوقف التحميل أولاً
           isLoading.value = false;
 
           if (rememberMe.value) {
@@ -73,10 +71,10 @@ class LoginController extends GetxController {
             margin: const EdgeInsets.all(10),
           );
 
-          // 2. استخدم toNamed بدلاً من offAllNamed للسماح بالرجوع
-          Get.toNamed(Routes.OTP);
+          // أضف تأخيرًا بسيطًا للسماح للـ Snackbar بالظهور قبل الانتقال
+          await Future.delayed(const Duration(milliseconds: 500));
 
-          // --- نهاية التعديلات ---
+          Get.toNamed(Routes.OTP);
         } else {
           throw "Incorrect email or password";
         }
@@ -90,7 +88,6 @@ class LoginController extends GetxController {
           margin: const EdgeInsets.all(10),
         );
       } finally {
-        // 3. تأكد من إيقاف التحميل أيضًا في حالة الفشل أو الخطأ
         if (isLoading.value) {
           isLoading.value = false;
         }
