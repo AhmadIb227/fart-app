@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           // فتح التطبيق مباشرة على صفحة Register
-          initialRoute: AppRoutes.profileSetup,
+          initialRoute: AppRoutes.chats,
           getPages: AppPages.routes,
         );
       },

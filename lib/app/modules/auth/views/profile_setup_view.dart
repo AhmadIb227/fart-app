@@ -16,24 +16,20 @@ class ProfileSetupView extends GetView<ProfileSetupController> {
   Widget build(BuildContext context) {
     final c = Get.put(ProfileSetupController());
 
-    // طغيان الأخضر كما اتفقنا سابقًا (+120.h)
-    final double headerExtra = 120.h;
-    final double headerBase = 0.30.sh;
+    final double headerExtra = 122.h;
+    final double headerBase = 0.38.sh;
     final double headerH = headerBase + headerExtra;
 
     final double avatarSize = 140.w;
     final double w = 1.sw;
 
-    // أقطار الدوائر (الفضي + الأبيض)
-    final double silverD = w * 1.65;
-    final double whiteD = w * 1.72;
+    final double greenD = w * 1.65;
+    final double silverD = w * 1.72;
 
-    // === الجديد: عكس اتجاه الأقواس للأعلى ===
-    // عندما نجعل bottom موجبًا، يدخل جزء من الدائرة "داخل" الهيدر
-    // ويظهر قاع الدائرة فقط، فيبدو القوس للأعلى.
-    final double silverBottom =
-        silverD * 0.22; // اضبط النسب لو أردت قوس أعمق/أخف
-    final double whiteBottom = whiteD * 0.30;
+    // موضع الأخضر (الأصغر)
+    final double greenBottom = greenD * 0.22;
+
+    final double silverBottom = greenBottom - (silverD - greenD) / 3 - 48.h;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -43,36 +39,11 @@ class ProfileSetupView extends GetView<ProfileSetupController> {
           children: [
             // =================== الهيدر ===================
             SizedBox(
-              height: headerH + avatarSize * 0.60,
+              height: headerH + avatarSize * 0.65,
               width: double.infinity,
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  // خلفية خضراء متدرّجة
-                  Positioned.fill(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        gradient: AppColors.greenGradient,
-                      ),
-                    ),
-                  ),
-
-                  // الدائرة البيضاء داخل الهيدر (قوس للأعلى)
-                  Positioned(
-                    left: (w - whiteD) / 2,
-                    right: (w - whiteD) / 2,
-                    bottom: whiteBottom,
-                    child: Container(
-                      width: whiteD,
-                      height: whiteD,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-
-                  // الدائرة الفضية داخل الهيدر فوق البيضاء (قوس للأعلى)
                   Positioned(
                     left: (w - silverD) / 2,
                     right: (w - silverD) / 2,
@@ -81,7 +52,21 @@ class ProfileSetupView extends GetView<ProfileSetupController> {
                       width: silverD,
                       height: silverD,
                       decoration: const BoxDecoration(
-                        color: AppColors.silver,
+                        color: AppColors.silver, // الفضي/الرمادي
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+
+                  Positioned(
+                    left: (w - greenD) / 2,
+                    right: (w - greenD) / 2,
+                    bottom: greenBottom,
+                    child: Container(
+                      width: greenD,
+                      height: greenD,
+                      decoration: const BoxDecoration(
+                        color: AppColors.primaryGreen,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -119,7 +104,7 @@ class ProfileSetupView extends GetView<ProfileSetupController> {
                     ),
                   ),
 
-                  // الأفاتار — ثبّتنا موضعه بتعويض headerExtra حتى لا يهبط
+                  // الصورة الرمزية في الوسط
                   Positioned(
                     top: headerH - headerExtra - avatarSize * 0.70,
                     left: 0,
