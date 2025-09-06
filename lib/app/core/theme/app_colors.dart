@@ -5,4 +5,5 @@ class AppColors {
   static const Color accentGold = Color(0xFFC9A961);  // الذهبي
   static const Color backgroundGray = Color(0xFFF5F5F5); // رمادي فاتح
   static const Color white = Colors.white;
+  static const Color errorRed = Color(0xFFE53935); // أحمر واضح وخفيف
 }

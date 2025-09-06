@@ -13,24 +13,22 @@ class SplashController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // إظهار تدريجي للشعار
-    Future.delayed(Duration(milliseconds: 200), () {
+
+    Future.delayed(const Duration(milliseconds: 200), () {
       logoVisible.value = true;
     });
 
-    // حركة بسيطة للنمط (تغيير offset كل فترة)
-    _timer = Timer.periodic(Duration(milliseconds: 80), (t) {
+    _timer = Timer.periodic(const Duration(milliseconds: 80), (t) {
       patternOffset += 0.5;
       if (patternOffset > 6) patternOffset = 0;
-      update(); // لإعادة بناء view عبر GetBuilder أو Obx مع قيم بسيطة
+      update();
     });
 
-    // الانتقال بعد 3 ثواني
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (storage.isFirstLaunch()) {
         Get.offAllNamed(Routes.onboarding);
       } else {
-        Get.offAllNamed(Routes.home);
+        Get.offAllNamed(Routes.profile); // ← بدل Home إلى Profile
       }
     });
   }

@@ -5,7 +5,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../core/values/assets.dart';
 import '../../../core/values/strings.dart';
 import '../../../core/theme/app_colors.dart';
-import '../../../widgets/buttons/primary_button.dart';
 import '../../../services/storage_service.dart';
 import '../../../routes/app_routes.dart';
 
@@ -77,12 +76,12 @@ class OnboardingController extends GetxController {
 
   void skip() {
     storage.setOnboardingSeen();
-    Get.offAllNamed(Routes.home);
+    Get.offAllNamed(Routes.profile);
   }
 
   void done() {
     storage.setOnboardingSeen();
-    Get.offAllNamed(Routes.home);
+    Get.offAllNamed(Routes.profile);
   }
 
   @override

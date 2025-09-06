@@ -1,5 +1,7 @@
-class Routes {
-  static const String splash = '/';
-  static const String onboarding = '/onboarding';
-  static const String home = '/home';
+abstract class Routes {
+  static const splash = '/';
+  static const onboarding = '/onboarding';
+  static const profile = '/profile';
+  static const editProfile = '/profile/edit';
+  static const more = '/more';
 }
