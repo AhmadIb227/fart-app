@@ -62,19 +62,7 @@ class LoginController extends GetxController {
             await storage.remove('email');
           }
 
-          Get.snackbar(
-            "Login Success",
-            "Welcome back!",
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(10),
-          );
-
-          // أضف تأخيرًا بسيطًا للسماح للـ Snackbar بالظهور قبل الانتقال
-          await Future.delayed(const Duration(milliseconds: 500));
-
-          Get.toNamed(Routes.OTP);
+          Get.toNamed(Routes.SECURITY_CHOICE);
         } else {
           throw "Incorrect email or password";
         }
