@@ -4,7 +4,14 @@ import 'package:messaging_app/app/modules/chats/views/conversation_view.dart';
 import 'package:messaging_app/app/modules/friends/bindings/friends_binding.dart';
 import 'package:messaging_app/app/modules/friends/views/add_friend_view.dart';
 import 'package:messaging_app/app/modules/groups/bindings/create_group_binding.dart';
+import 'package:messaging_app/app/modules/groups/bindings/group_call_binding.dart';
+import 'package:messaging_app/app/modules/groups/bindings/group_info_binding.dart';
+import 'package:messaging_app/app/modules/groups/bindings/groups_binding.dart';
 import 'package:messaging_app/app/modules/groups/views/create_group_view.dart';
+import 'package:messaging_app/app/modules/groups/views/group_call_view.dart';
+import 'package:messaging_app/app/modules/groups/views/group_info_view.dart';
+import 'package:messaging_app/app/modules/groups/views/group_video_call_view.dart';
+import 'package:messaging_app/app/modules/groups/views/groups_view.dart';
 import 'package:messaging_app/app/routes/app_routes.dart';
 import '../modules/splash/views/splash_view.dart';
 import '../modules/splash/views/onboarding_view.dart';
@@ -16,7 +23,6 @@ import '../modules/security/views/biometric_setup_view.dart';
 import '../modules/auth/bindings/auth_binding.dart';
 import '../modules/chats/views/chat_list_view.dart';
 import '../modules/chats/bindings/chat_binding.dart';
-import 'app_routes.dart';
 
 class AppPages {
   static final routes = <GetPage>[
@@ -59,6 +65,26 @@ class AppPages {
       name: Routes.conversation,
       page: () => const ConversationView(),
       binding: ConversationBinding(),
+    ),
+    GetPage(
+      name: Routes.GROUPS,
+      page: () => const GroupsView(),
+      binding: GroupsBinding(),
+    ),
+    GetPage(
+      name: Routes.GROUP_CALL,
+      page: () => const GroupCallView(),
+      binding: GroupCallBinding(),
+    ),
+    GetPage(
+      name: Routes.GROUP_VIDEO_CALL,
+      page: () => const GroupVideoCallView(),
+      binding: GroupCallBinding(),
+    ),
+    GetPage(
+      name: Routes.GROUP_INFO,
+      page: () => const GroupInfoView(),
+      binding: GroupInfoBinding(),
     ),
   ];
 }

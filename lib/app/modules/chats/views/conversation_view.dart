@@ -18,7 +18,6 @@ class ConversationView extends GetView<ConversationController> {
       body: SafeArea(
         child: Stack(
           children: [
-            // ===== العمود الأساسي =====
             Column(
               children: [
                 // ===== شريط علوي =====
@@ -27,15 +26,12 @@ class ConversationView extends GetView<ConversationController> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Back (نغلق لوحة الإضافات أيضًا عند الرجوع)
                       BackButtonMd(
                         onTap: () {
                           controller.closeAttachPanel();
                           Get.back();
                         },
                       ),
-
-                      // عنوان
                       Text(
                         AppStrings.messageTitle,
                         style: TextStyle(
@@ -44,8 +40,6 @@ class ConversationView extends GetView<ConversationController> {
                           color: const Color(0xFF0D1217),
                         ),
                       ),
-
-                      // More (ظل خفيف)
                       _CircleIcon(
                         size: 42.w,
                         radius: 22.r,
@@ -67,18 +61,19 @@ class ConversationView extends GetView<ConversationController> {
 
                 SizedBox(height: 16.h),
 
-                // ===== معلومات المستخدم + فيديو/اتصال =====
+                // ===== معلومات (مستخدم/كروب) + فيديو/اتصال =====
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.w),
                   child: Obx(() {
                     final ContactUser? cu = controller.user.value;
+                    final isGroup = controller.group.value != null;
+
                     final name = cu?.name ?? 'User';
                     final phone = cu?.phone ?? '';
                     final avatarUrl = cu?.avatarUrl;
 
                     return Row(
                       children: [
-                        // Avatar 42px
                         CircleAvatar(
                           radius: 21.r,
                           backgroundColor: const Color(0xFFEAEAEA),
@@ -97,25 +92,31 @@ class ConversationView extends GetView<ConversationController> {
                                 )
                               : null,
                         ),
-
                         SizedBox(width: 16.w),
-
-                        // الاسم + الرقم
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                name,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600, // SemiBold
-                                  color: const Color(0xFF0D1217),
+                              GestureDetector(
+                                onTap: controller
+                                    .openGroupInfo, // يفتح صفحة المعلومات
+                                child: Text(
+                                  name,
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: const Color(0xFF0D1217),
+                                    decoration: TextDecoration
+                                        .underline, // اختياري ليوضح أنه قابل للنقر
+                                    decorationColor: const Color(0x330D1217),
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 8.h),
                               Text(
-                                phone,
+                                isGroup
+                                    ? '${controller.group.value!.membersCount} members'
+                                    : phone,
                                 style: TextStyle(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w400,
@@ -125,16 +126,14 @@ class ConversationView extends GetView<ConversationController> {
                             ],
                           ),
                         ),
-
                         SizedBox(width: 16.w),
-
-                        // Video (بدون ظل)
+                        // Video
                         _CircleIcon(
                           size: 42.w,
                           radius: 22.r,
                           bg: Colors.white.withOpacity(0.10),
                           hasShadow: false,
-                          onTap: () {},
+                          onTap: () => controller.startGroupCall(video: true),
                           child: ShaderMask(
                             shaderCallback: (rect) =>
                                 AppColors.goldGradient.createShader(rect),
@@ -144,16 +143,14 @@ class ConversationView extends GetView<ConversationController> {
                             ),
                           ),
                         ),
-
                         SizedBox(width: 10.w),
-
-                        // Phone (بدون ظل)
+                        // Phone
                         _CircleIcon(
                           size: 42.w,
                           radius: 22.r,
                           bg: Colors.white.withOpacity(0.10),
                           hasShadow: false,
-                          onTap: () {},
+                          onTap: () => controller.startGroupCall(video: false),
                           child: ShaderMask(
                             shaderCallback: (rect) =>
                                 AppColors.goldGradient.createShader(rect),
@@ -170,7 +167,7 @@ class ConversationView extends GetView<ConversationController> {
 
                 SizedBox(height: 16.h),
 
-                // ===== حاوية الرسائل =====
+                // ===== الرسائل =====
                 Expanded(
                   child: Container(
                     width: double.infinity,
@@ -205,8 +202,8 @@ class ConversationView extends GetView<ConversationController> {
                               ),
                               decoration: BoxDecoration(
                                 color: isMe
-                                    ? const Color(0xFF08512A) // مرسل
-                                    : Colors.white, // مستقبل
+                                    ? const Color(0xFF08512A)
+                                    : Colors.white,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(16.r),
                                   topRight: Radius.circular(16.r),
@@ -236,12 +233,11 @@ class ConversationView extends GetView<ConversationController> {
                   ),
                 ),
 
-                // ===== شريط الإدخال =====
                 const _ChatInput(),
               ],
             ),
 
-            // ===== لوحة الإضافات (Popup) =====
+            // ===== لوحة الإضافات =====
             Obx(() {
               final open = controller.isAttachOpen.value;
               return IgnorePointer(
@@ -252,7 +248,6 @@ class ConversationView extends GetView<ConversationController> {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Padding(
-                      // تبتعد عن الأسفل حتى لا تغطي شريط الإدخال
                       padding: EdgeInsets.only(
                         left: 16.w,
                         right: 16.w,
@@ -278,7 +273,6 @@ class ConversationView extends GetView<ConversationController> {
   }
 }
 
-/// زر دائري شفاف قابل لإضافة/إلغاء الظل
 class _CircleIcon extends StatelessWidget {
   final double size;
   final double radius;
@@ -312,7 +306,7 @@ class _CircleIcon extends StatelessWidget {
             boxShadow: hasShadow
                 ? const [
                     BoxShadow(
-                      color: Color(0x1A0D0A2C), // 10%
+                      color: Color(0x1A0D0A2C),
                       blurRadius: 12,
                       offset: Offset(0, 4),
                     ),
@@ -326,7 +320,6 @@ class _CircleIcon extends StatelessWidget {
   }
 }
 
-/// شريط الإدخال (زر + ، حقل بإطار ذهبي 1px ، زر إرسال بتدرّج)
 class _ChatInput extends GetView<ConversationController> {
   const _ChatInput({super.key});
 
@@ -336,7 +329,6 @@ class _ChatInput extends GetView<ConversationController> {
       padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 16.h),
       child: Row(
         children: [
-          // زر +
           _CircleIcon(
             size: 42.w,
             radius: 22.r,
@@ -346,8 +338,6 @@ class _ChatInput extends GetView<ConversationController> {
             child: const Icon(Icons.add, color: Color(0xFF2C2D3A)),
           ),
           SizedBox(width: 12.w),
-
-          // حقل الإدخال
           Expanded(
             child: Container(
               constraints: BoxConstraints(minHeight: 56.h),
@@ -369,10 +359,7 @@ class _ChatInput extends GetView<ConversationController> {
               ),
             ),
           ),
-
           SizedBox(width: 12.w),
-
-          // زر الإرسال
           SizedBox(
             width: 42.w,
             height: 42.w,
@@ -388,7 +375,7 @@ class _ChatInput extends GetView<ConversationController> {
                     borderRadius: BorderRadius.circular(22.r),
                     boxShadow: const [
                       BoxShadow(
-                        color: Color(0x0F0D0A2C), // 6%
+                        color: Color(0x0F0D0A2C),
                         blurRadius: 12,
                         offset: Offset(0, 4),
                       ),
@@ -415,7 +402,6 @@ class _ChatInput extends GetView<ConversationController> {
   }
 }
 
-/// لوحة الإضافات (336w، padding 24، radius 12، shadow 10%)
 class _AttachmentsPopup extends StatelessWidget {
   final VoidCallback onCamera;
   final VoidCallback onRecord;
@@ -444,7 +430,7 @@ class _AttachmentsPopup extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x1A0D0A2C), // 10%
+            color: Color(0x1A0D0A2C),
             blurRadius: 20,
             offset: Offset(0, 6),
           ),
@@ -453,36 +439,36 @@ class _AttachmentsPopup extends StatelessWidget {
       child: Wrap(
         spacing: 24.w,
         runSpacing: 24.h,
-        children: [
+        children: const [
           _AttachItem(
             icon: Icons.photo_camera_outlined,
             label: 'Camera',
-            onTap: onCamera,
+            onTap: null,
           ),
           _AttachItem(
             icon: Icons.mic_none_outlined,
             label: 'Record',
-            onTap: onRecord,
+            onTap: null,
           ),
           _AttachItem(
             icon: Icons.person_outline,
             label: 'Contact',
-            onTap: onContact,
+            onTap: null,
           ),
           _AttachItem(
             icon: Icons.image_outlined,
             label: 'Gallery',
-            onTap: onGallery,
+            onTap: null,
           ),
           _AttachItem(
             icon: Icons.location_on_outlined,
             label: 'My Location',
-            onTap: onLocation,
+            onTap: null,
           ),
           _AttachItem(
             icon: Icons.insert_drive_file_outlined,
             label: 'Document',
-            onTap: onDocument,
+            onTap: null,
           ),
         ],
       ),
@@ -490,11 +476,10 @@ class _AttachmentsPopup extends StatelessWidget {
   }
 }
 
-/// عنصر: دائرة 42 بتدرّج أخضر + أيقونة ذهبية + نص 12/Medium
 class _AttachItem extends StatelessWidget {
   final IconData icon;
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const _AttachItem({
     super.key,
@@ -517,7 +502,7 @@ class _AttachItem extends StatelessWidget {
               width: 42.w,
               height: 42.w,
               decoration: BoxDecoration(
-                gradient: AppColors.greenGradient, // #032524 -> #0B615F
+                gradient: AppColors.greenGradient,
                 borderRadius: BorderRadius.circular(50.r),
               ),
               child: Center(

@@ -20,4 +20,8 @@ abstract class Routes {
   static const chats = '/chats';
   static const createGroup = '/create-group';
   static const conversation = '/conversation';
+  static const GROUPS = '/groups';
+  static const GROUP_CALL = '/group-call';
+  static const GROUP_VIDEO_CALL = '/group-video-call';
+  static const GROUP_INFO = '/group-info';
 }

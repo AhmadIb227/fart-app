@@ -2,15 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:messaging_app/app/routes/app_routes.dart';
 
 import '../../../data/models/contact_user.dart';
+import '../../../data/models/group_meta.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:record/record.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 
 enum MsgKind { text, image, file, audio, location, contact }
 
@@ -41,9 +43,9 @@ class ChatMessage {
 
 class ConversationController extends GetxController {
   final Rxn<ContactUser> user = Rxn<ContactUser>();
+  final Rxn<GroupMeta> group = Rxn<GroupMeta>(); // <— كروب
 
   final RxList<ChatMessage> _typed = <ChatMessage>[].obs;
-
   final RxList<Map<String, dynamic>> messages = <Map<String, dynamic>>[].obs;
 
   final TextEditingController msgCtrl = TextEditingController();
@@ -58,11 +60,14 @@ class ConversationController extends GetxController {
   void onInit() {
     super.onInit();
 
-    // استلام جهة الاتصال
     final arg = Get.arguments;
-    if (arg is ContactUser) user.value = arg;
+    if (arg is ContactUser) {
+      user.value = arg;
+    } else if (arg is Map) {
+      if (arg['user'] is ContactUser) user.value = arg['user'];
+      if (arg['group'] is GroupMeta) group.value = arg['group'];
+    }
 
-    // رسائل تجريبية
     _typed.addAll([
       ChatMessage(
         id: 'm1',
@@ -84,6 +89,26 @@ class ConversationController extends GetxController {
     _syncToView();
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToEnd());
+  }
+
+  void openGroupInfo() {
+    final g = group.value;
+    if (g == null) return;
+    Get.toNamed(Routes.GROUP_INFO, arguments: g);
+  }
+
+  // ===== اتصال المجموعة =====
+  // ===== اتصال المجموعة =====
+  void startGroupCall({bool video = false}) {
+    final g = group.value;
+    if (g == null) {
+      Get.snackbar('Call', 'Group metadata not found');
+      return;
+    }
+    Get.toNamed(
+      video ? Routes.GROUP_VIDEO_CALL : Routes.GROUP_CALL,
+      arguments: g,
+    );
   }
 
   // ====== فتح/إغلاق لوحة الإضافات ======
@@ -146,6 +171,8 @@ class ConversationController extends GetxController {
     final ok = await _ask(
       Platform.isAndroid ? Permission.photos : Permission.photos,
     );
+    if (!ok) return;
+
     final XFile? file = await _picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 85,
@@ -191,7 +218,6 @@ class ConversationController extends GetxController {
   Future<void> onShareLocation() async {
     closeAttachPanel();
 
-    // صلاحية الموقع
     bool svcEnabled = await Geolocator.isLocationServiceEnabled();
     if (!svcEnabled) {
       Get.snackbar('Location', 'Location services are disabled');
@@ -235,7 +261,6 @@ class ConversationController extends GetxController {
 
     final isRec = await _rec.isRecording();
     if (!isRec) {
-      // ابدأ التسجيل
       await _rec.start(
         const RecordConfig(encoder: AudioEncoder.aacLc, bitRate: 128000),
         path: '',
@@ -259,21 +284,30 @@ class ConversationController extends GetxController {
     }
   }
 
-  /// اختيار جهة اتصال من الجهاز
   Future<void> onPickContact() async {
     closeAttachPanel();
 
-    final ok = await _ask(Permission.contacts);
-    if (!ok) return;
+    final allowed = await FlutterContacts.requestPermission(readonly: true);
+    if (!allowed) return;
 
     try {
-      final contact = await ContactsService.openDeviceContactPicker();
-      if (contact == null) return;
+      final picked = await FlutterContacts.openExternalPick();
+      if (picked == null) return;
 
-      final display = contact.displayName ?? 'Contact';
+      final contact =
+          await FlutterContacts.getContact(
+            picked.id,
+            withProperties: true,
+            withPhoto: false,
+          ) ??
+          picked;
+
+      final display = contact.displayName.isNotEmpty
+          ? contact.displayName
+          : 'Contact';
       String phone = '';
-      if (contact.phones != null && contact.phones!.isNotEmpty) {
-        phone = contact.phones!.first.value ?? '';
+      if (contact.phones.isNotEmpty) {
+        phone = contact.phones.first.number;
       }
 
       _typed.add(

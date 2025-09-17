@@ -170,19 +170,23 @@ class ChatListController extends GetxController {
     Get.toNamed(Routes.conversation, arguments: cu);
   }
 
-  void onNavTap(int i) {
-    navIndex.value = i;
-    switch (i) {
-      case 0:
+  void onNavTap(int index) {
+    navIndex.value = index;
+    closeMenu();
+
+    switch (index) {
+      case 0: // Chats
+        if (Get.currentRoute != Routes.chats) {
+          Get.offNamed(Routes.chats);
+        }
         break;
-      case 1:
-        Get.snackbar('Navigation', 'Groups tapped');
+      case 1: // Groups
+        if (Get.currentRoute != Routes.GROUPS) {
+          Get.offNamed(Routes.GROUPS);
+        }
         break;
-      case 2:
-        Get.snackbar('Navigation', 'Profile tapped');
-        break;
-      case 3:
-        Get.snackbar('Navigation', 'More tapped');
+      // لو عندك تبويبات أخرى (Profile، More... الخ) كمّل هنا
+      default:
         break;
     }
   }
