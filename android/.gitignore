@@ -1,5 +1,5 @@
 # =======================
-# Flutter / Dart عام
+# Flutter / Dart (عام)
 # =======================
 .dart_tool/
 .packages
@@ -7,11 +7,6 @@
 .flutter-plugins-dependencies
 .melos_tool/
 build/
-# لو لا تدعم هذه المنصات احذف السطور الخاصة بها
-.macos/
-.windows/
-.linux/
-web/.dart_tool/
 # نُبقي .metadata عادةً مُلتزم
 # .metadata
 
@@ -38,11 +33,11 @@ android/key.properties
 **/*.keystore
 **/*.jks
 
-# ⚠️ لا تُهمل Gradle Wrapper ولا سكربتاته — يجب تتبّعها في المستودع
-# gradlew
-# gradlew.bat
+# ⚠️ لا تُهمل Gradle Wrapper ولا سكربتاته — يجب تتبّعها في المستودع:
 # android/gradle/wrapper/gradle-wrapper.jar
 # android/gradle/wrapper/gradle-wrapper.properties
+# android/gradlew
+# android/gradlew.bat
 
 # =======================
 # iOS
@@ -56,11 +51,12 @@ ios/**/DerivedData/
 ios/**/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
 ios/**/Runner.xcworkspace/xcuserdata/
 ios/**/xcuserdata/
+# اختياري: تجاهُل ملفات حساسة/محلية
 ios/**/Profile.plist
-ios/**/GoogleService-Info.plist # إن كنت لا تريد تضمينه علنًا (اختياري)
+ios/**/GoogleService-Info.plist
 
 # =======================
-# macOS (إن وجِدت)
+# macOS (إن وُجدت المنصة)
 # =======================
 macos/Pods/
 macos/.symlinks/
@@ -69,19 +65,19 @@ macos/**/xcuserdata/
 macos/**/DerivedData/
 
 # =======================
-# Windows (إن وجِدت)
+# Windows (إن وُجدت المنصة)
 # =======================
 windows/flutter/ephemeral/
 
 # =======================
-# Linux (إن وجِدت)
+# Linux (إن وُجدت المنصة)
 # =======================
 linux/flutter/ephemeral/
 
 # =======================
-# Web (إن وجِدت)
+# Web (إن وُجدت المنصة)
 # =======================
-# عادة لا توجد نواتج بحاجة للتجاهل غير build/ أعلاه
+# عادة لا توجد نواتج إضافية غير build/ أعلاه
 
 # =======================
 # أدوات نشر/أتمتة (اختياري)
